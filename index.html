@@ -1,0 +1,2502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Português Semanal</title>
+
+<!-- iOS home-screen app behaviour -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Português">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#173151">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="manifest" href="./manifest.json">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;1,400&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Palette note: blue is used as the dominant field because it supports
+       focus and calm over long study sessions; a muted gold carries the one
+       call-to-action (warm tones sustain attention without the alarm
+       connotation of red); green is reserved only for "known" states.
+       Category colour-coding (verb / connector / theme word) leans on
+       colour-cued recall rather than decoration. */
+    --ink:#1c2430;
+    --paper:#f7f4ec;
+    --blue-deep:#173151;
+    --blue:#1b3a5c;
+    --blue-mid:#3f6690;
+    --blue-pale:#dfe8f0;
+    --gold:#c08a2e;
+    --gold-pale:#f2e2bd;
+    --sage:#5c7a63;
+    --sage-pale:#e2e9e0;
+    --good:#3c7a5e;
+    --line:#dcd6c6;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    padding-top:env(safe-area-inset-top);
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .app{
+    max-width:480px;
+    margin:0 auto;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    background:var(--paper);
+  }
+
+  /* ---------- Header ---------- */
+  .hero{
+    background:linear-gradient(165deg, var(--blue-deep), var(--blue) 70%);
+    color:var(--paper);
+    padding:26px 22px 20px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute;
+    top:0; right:0; bottom:0;
+    width:88px;
+    background-image:
+      linear-gradient(45deg, rgba(255,255,255,0.06) 25%, transparent 25%),
+      linear-gradient(-45deg, rgba(255,255,255,0.06) 25%, transparent 25%);
+    background-size:22px 22px;
+  }
+  .hero-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    position:relative;
+    z-index:1;
+  }
+  .eyebrow{
+    font-size:12.5px;
+    letter-spacing:0.01em;
+    color:var(--gold-pale);
+    margin:0 0 2px;
+  }
+  .week-num{
+    font-family:'Newsreader', serif;
+    font-weight:500;
+    font-size:42px;
+    line-height:1;
+    margin:0;
+  }
+  .week-total{
+    font-family:'Newsreader', serif;
+    font-size:19px;
+    color:rgba(247,244,236,0.55);
+  }
+  .theme-pill{
+    display:inline-block;
+    margin-top:8px;
+    background:rgba(255,255,255,0.1);
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:999px;
+    padding:5px 12px;
+    font-size:12.5px;
+    color:var(--paper);
+  }
+  .streak-pill{
+    background:rgba(255,255,255,0.1);
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:999px;
+    padding:6px 12px;
+    font-size:12.5px;
+    text-align:right;
+    white-space:nowrap;
+  }
+  .progress-track{
+    margin-top:16px;
+    height:5px;
+    border-radius:3px;
+    background:rgba(255,255,255,0.15);
+    overflow:hidden;
+    position:relative;
+    z-index:1;
+  }
+  .progress-fill{
+    height:100%;
+    background:var(--gold);
+    border-radius:3px;
+    transition:width 0.4s ease;
+  }
+  .progress-caption{
+    margin-top:7px;
+    font-size:12.5px;
+    color:rgba(247,244,236,0.6);
+    position:relative;
+    z-index:1;
+  }
+
+  /* ---------- Tabs ---------- */
+  .tabs{
+    display:flex;
+    gap:2px;
+    padding:12px 16px 0;
+  }
+  .tab{
+    flex:1;
+    border:none;
+    background:transparent;
+    padding:10px 4px;
+    font-family:'Work Sans', sans-serif;
+    font-size:13px;
+    font-weight:600;
+    color:#9b937f;
+    border-bottom:2px solid transparent;
+    cursor:pointer;
+  }
+  .tab.active{
+    color:var(--blue);
+    border-bottom:2px solid var(--gold);
+  }
+
+  /* ---------- Main content ---------- */
+  .content{
+    flex:1;
+    padding:16px 20px 40px;
+  }
+  .section-label{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    font-size:12px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:#8b8474;
+    margin:20px 0 10px;
+  }
+  .section-label .accent{ color:var(--gold); }
+  .section-label:first-child{ margin-top:0; }
+  .empty-note{
+    font-family:'Newsreader', serif;
+    font-style:italic;
+    color:#7a7362;
+    font-size:15px;
+    padding:6px 2px 4px;
+  }
+
+  /* ---------- Flashcard grid ---------- */
+  .card-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .flash{
+    position:relative;
+    aspect-ratio:1/1.08;
+    border-radius:10px;
+    cursor:pointer;
+    perspective:800px;
+  }
+  .flash-inner{
+    position:relative;
+    width:100%; height:100%;
+    transform-style:preserve-3d;
+    transition:transform 0.45s cubic-bezier(.4,.2,.2,1);
+  }
+  .flash.flipped .flash-inner{ transform:rotateY(180deg); }
+  .flash-face{
+    position:absolute; inset:0;
+    backface-visibility:hidden;
+    border-radius:10px;
+    border:1px solid var(--line);
+    background:var(--card);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:10px;
+  }
+  .flash-face.back{
+    transform:rotateY(180deg);
+    background:var(--blue-pale);
+    border-color:var(--blue-mid);
+  }
+  .flash-word{
+    font-family:'Newsreader', serif;
+    font-size:15.5px;
+    font-weight:500;
+    line-height:1.25;
+  }
+  .flash-face.back .flash-word{ color:var(--blue); }
+  .cat-tag{
+    position:absolute;
+    top:9px; left:9px;
+    font-size:9.5px;
+    font-weight:600;
+    letter-spacing:0.03em;
+    text-transform:uppercase;
+    padding:3px 7px;
+    border-radius:999px;
+  }
+  .cat-tag.verb{ background:var(--gold-pale); color:#8a611e; }
+  .cat-tag.grammar{ background:var(--sage-pale); color:#3f5745; }
+  .cat-tag.theme{ background:var(--blue-pale); color:var(--blue-mid); }
+  .flash-face.back .cat-tag.theme{ background:rgba(255,255,255,0.55); }
+  .flash-check{
+    position:absolute;
+    bottom:9px; right:9px;
+    width:20px; height:20px;
+    border-radius:50%;
+    border:1.5px solid var(--line);
+    background:var(--card);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    color:transparent;
+  }
+  .flash-check.done{
+    background:var(--good);
+    border-color:var(--good);
+    color:white;
+  }
+
+  /* ---------- Advance button ---------- */
+  .advance-wrap{
+    margin-top:26px;
+    text-align:center;
+  }
+  .advance-btn{
+    width:100%;
+    background:var(--gold);
+    color:#2b2005;
+    border:none;
+    padding:14px 16px;
+    border-radius:8px;
+    font-family:'Work Sans', sans-serif;
+    font-weight:700;
+    font-size:15px;
+    cursor:pointer;
+  }
+  .advance-btn:active{ opacity:0.85; }
+  .advance-hint{
+    font-size:12.5px;
+    color:#8b8474;
+    margin-top:8px;
+  }
+  .legend{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    margin-top:18px;
+    padding:12px 14px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:8px;
+    font-size:12px;
+    color:#5c5747;
+  }
+  .legend-item{ display:flex; align-items:center; gap:6px; }
+  .legend-dot{ width:9px; height:9px; border-radius:50%; }
+
+  /* ---------- All words / list ---------- */
+  .search-input{
+    width:100%;
+    padding:10px 12px;
+    border-radius:8px;
+    border:1px solid var(--line);
+    font-family:'Work Sans', sans-serif;
+    font-size:14px;
+    background:var(--card);
+    margin-bottom:14px;
+  }
+  .word-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:11px 4px;
+    border-bottom:1px solid var(--line);
+    font-size:14.5px;
+    gap:8px;
+  }
+  .word-row .en{ color:var(--ink); flex:1; }
+  .word-row .pt{ color:var(--blue); font-family:'Newsreader', serif; font-style:italic; flex:1; text-align:right; }
+  .word-row .wk{ font-size:11px; color:#a39c8a; min-width:44px; text-align:right; }
+
+  /* ---------- Roadmap / overview ---------- */
+  .roadmap-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 4px;
+    border-bottom:1px solid var(--line);
+  }
+  .roadmap-row.current{
+    background:var(--gold-pale);
+    border-radius:8px;
+    padding:12px 10px;
+    border-bottom:none;
+    margin:2px 0;
+  }
+  .roadmap-weeks{ font-size:11.5px; color:#8b8474; min-width:76px; }
+  .roadmap-theme{ font-family:'Newsreader', serif; font-size:15px; flex:1; }
+  .roadmap-status{ font-size:11px; color:var(--good); }
+
+  /* ---------- Settings ---------- */
+  .settings-block{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:16px;
+    margin-bottom:16px;
+  }
+  .settings-block h3{
+    font-family:'Newsreader', serif;
+    font-weight:500;
+    font-size:17px;
+    margin:0 0 6px;
+    color:var(--blue);
+  }
+  .settings-block p{
+    font-size:13.5px;
+    color:#5c5747;
+    line-height:1.5;
+    margin:0 0 12px;
+  }
+  .row-btns{ display:flex; gap:8px; flex-wrap:wrap; }
+  .btn-sec{
+    background:var(--paper);
+    border:1px solid var(--line);
+    padding:9px 14px;
+    border-radius:7px;
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--blue);
+    cursor:pointer;
+  }
+  .btn-sec.danger{ color:#a0402c; border-color:#e6b39c; }
+  textarea{
+    width:100%;
+    min-height:90px;
+    font-family:monospace;
+    font-size:12.5px;
+    padding:10px;
+    border-radius:7px;
+    border:1px solid var(--line);
+    resize:vertical;
+  }
+  .week-jump{
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+  .week-jump input{
+    width:70px;
+    padding:8px 10px;
+    border-radius:7px;
+    border:1px solid var(--line);
+    font-family:'Work Sans', sans-serif;
+  }
+  .loading{
+    padding:40px 20px;
+    text-align:center;
+    color:#8b8474;
+    font-family:'Newsreader', serif;
+    font-style:italic;
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="loading">A carregar...</div>
+</div>
+
+<script>
+const WEEKS = [
+  [
+    ["to tidy up","arrumar","verb"],
+    ["despite","apesar de","grammar"],
+    ["lion","leão","theme"],
+    ["tiger","tigre","theme"],
+    ["elephant","elefante","theme"],
+    ["giraffe","girafa","theme"],
+    ["zebra","zebra","theme"],
+    ["monkey","macaco","theme"],
+    ["gorilla","gorila","theme"],
+    ["bear","urso","theme"],
+  ],
+  [
+    ["to fix / notice","reparar","verb"],
+    ["although","embora","grammar"],
+    ["swimming pool","piscina","theme"],
+    ["swimsuit","fato de banho","theme"],
+    ["bikini","biquíni","theme"],
+    ["swimming trunks","calções de banho","theme"],
+    ["beach towel","toalha de praia","theme"],
+    ["sunscreen","protetor solar","theme"],
+    ["diving board","trampolim","theme"],
+    ["lifeguard","nadador-salvador","theme"],
+  ],
+  [
+    ["to avoid","evitar","verb"],
+    ["however","contudo","grammar"],
+    ["gym","ginásio","theme"],
+    ["treadmill","passadeira","theme"],
+    ["weights","pesos","theme"],
+    ["dumbbell","haltere","theme"],
+    ["yoga mat","tapete de ioga","theme"],
+    ["personal trainer","personal trainer","theme"],
+    ["warm-up","aquecimento","theme"],
+    ["cool-down","retorno à calma","theme"],
+  ],
+  [
+    ["to allow","permitir","verb"],
+    ["nevertheless","no entanto","grammar"],
+    ["oven","forno","theme"],
+    ["stove / hob","fogão","theme"],
+    ["pot","panela","theme"],
+    ["frying pan","frigideira","theme"],
+    ["baking tray","tabuleiro","theme"],
+    ["mixing bowl","taça","theme"],
+    ["whisk","batedor de varas","theme"],
+    ["rolling pin","rolo da massa","theme"],
+  ],
+  [
+    ["to forbid","proibir","verb"],
+    ["therefore","portanto","grammar"],
+    ["menu","ementa","theme"],
+    ["starter","entrada","theme"],
+    ["main course","prato principal","theme"],
+    ["side dish","acompanhamento","theme"],
+    ["waiter","empregado de mesa","theme"],
+    ["waitress","empregada de mesa","theme"],
+    ["reservation","reserva","theme"],
+    ["table for two","mesa para dois","theme"],
+  ],
+  [
+    ["to suggest","sugerir","verb"],
+    ["so / that's why","por isso","grammar"],
+    ["suitcase","mala de viagem","theme"],
+    ["backpack","mochila","theme"],
+    ["passport","passaporte","theme"],
+    ["visa","visto","theme"],
+    ["boarding pass","cartão de embarque","theme"],
+    ["customs","alfândega","theme"],
+    ["security check","controlo de segurança","theme"],
+    ["departure","partida","theme"],
+  ],
+  [
+    ["to recommend","recomendar","verb"],
+    ["besides","além disso","grammar"],
+    ["forecast","previsão do tempo","theme"],
+    ["temperature","temperatura","theme"],
+    ["degree","grau","theme"],
+    ["humidity","humidade","theme"],
+    ["drizzle","chuvisco","theme"],
+    ["storm","tempestade","theme"],
+    ["thunder","trovão","theme"],
+    ["lightning","relâmpago","theme"],
+  ],
+  [
+    ["to insist","insistir","verb"],
+    ["on the other hand","por outro lado","grammar"],
+    ["Wi-Fi","Wi-Fi","theme"],
+    ["router","router","theme"],
+    ["laptop","portátil","theme"],
+    ["charger","carregador","theme"],
+    ["battery","bateria","theme"],
+    ["screen","ecrã","theme"],
+    ["keyboard","teclado","theme"],
+    ["mouse (device)","rato","theme"],
+  ],
+  [
+    ["to agree","concordar","verb"],
+    ["in other words","ou seja","grammar"],
+    ["deadline","prazo","theme"],
+    ["brainstorm","tempestade de ideias","theme"],
+    ["strategy","estratégia","theme"],
+    ["target audience","público-alvo","theme"],
+    ["brand","marca","theme"],
+    ["campaign","campanha","theme"],
+    ["budget","orçamento","theme"],
+    ["presentation","apresentação","theme"],
+  ],
+  [
+    ["to disagree","discordar","verb"],
+    ["that is to say","isto é","grammar"],
+    ["credit card","cartão de crédito","theme"],
+    ["debit card","cartão de débito","theme"],
+    ["cash machine","multibanco","theme"],
+    ["bank account","conta bancária","theme"],
+    ["savings","poupanças","theme"],
+    ["loan","empréstimo","theme"],
+    ["mortgage","hipoteca","theme"],
+    ["interest rate","taxa de juro","theme"],
+  ],
+  [
+    ["to compare","comparar","verb"],
+    ["given that","visto que","grammar"],
+    ["landlord","senhorio","theme"],
+    ["tenant","inquilino","theme"],
+    ["lease","contrato de arrendamento","theme"],
+    ["utility bill","fatura de serviços","theme"],
+    ["electricity","eletricidade","theme"],
+    ["plumbing","canalização","theme"],
+    ["leak","fuga","theme"],
+    ["renovation","obras","theme"],
+  ],
+  [
+    ["to evaluate","avaliar","verb"],
+    ["since (reason)","já que","grammar"],
+    ["residence permit","autorização de residência","theme"],
+    ["tax number","número de contribuinte","theme"],
+    ["official appointment","marcação","theme"],
+    ["city hall","câmara municipal","theme"],
+    ["notary","notário","theme"],
+    ["document","documento","theme"],
+    ["identity card","cartão de cidadão","theme"],
+    ["signature","assinatura","theme"],
+  ],
+  [
+    ["to measure","medir","verb"],
+    ["while","enquanto","grammar"],
+    ["prescription","receita médica","theme"],
+    ["symptom","sintoma","theme"],
+    ["diagnosis","diagnóstico","theme"],
+    ["treatment","tratamento","theme"],
+    ["surgery","cirurgia","theme"],
+    ["vaccine","vacina","theme"],
+    ["injection","injeção","theme"],
+    ["blood test","análise ao sangue","theme"],
+  ],
+  [
+    ["to calculate","calcular","verb"],
+    ["in case","caso","grammar"],
+    ["confident","confiante","theme"],
+    ["insecure","inseguro","theme"],
+    ["ambitious","ambicioso","theme"],
+    ["lazy","preguiçoso","theme"],
+    ["stubborn","teimoso","theme"],
+    ["patient (adj)","paciente","theme"],
+    ["impatient","impaciente","theme"],
+    ["generous","generoso","theme"],
+  ],
+  [
+    ["to add up","somar","verb"],
+    ["provided that","desde que","grammar"],
+    ["relationship","relação","theme"],
+    ["commitment","compromisso","theme"],
+    ["breakup","rutura","theme"],
+    ["divorce","divórcio","theme"],
+    ["engagement","noivado","theme"],
+    ["wedding","casamento","theme"],
+    ["wedding anniversary","aniversário de casamento","theme"],
+    ["romantic crush","paixoneta","theme"],
+  ],
+  [
+    ["to divide","dividir","verb"],
+    ["unless","a não ser que","grammar"],
+    ["sustainability","sustentabilidade","theme"],
+    ["recycling","reciclagem","theme"],
+    ["renewable energy","energia renovável","theme"],
+    ["solar panel","painel solar","theme"],
+    ["wind turbine","turbina eólica","theme"],
+    ["carbon footprint","pegada de carbono","theme"],
+    ["emissions","emissões","theme"],
+    ["pollution","poluição","theme"],
+  ],
+  [
+    ["to invest","investir","verb"],
+    ["without (+ subj.)","sem que","grammar"],
+    ["fabric","tecido","theme"],
+    ["cotton","algodão","theme"],
+    ["wool","lã","theme"],
+    ["silk","seda","theme"],
+    ["leather","couro","theme"],
+    ["denim","ganga","theme"],
+    ["pattern (design)","padrão","theme"],
+    ["stripe","risca","theme"],
+  ],
+  [
+    ["to save (money)","poupar","verb"],
+    ["so that","para que","grammar"],
+    ["exhibition","exposição","theme"],
+    ["gallery","galeria","theme"],
+    ["painting","quadro","theme"],
+    ["sculpture","escultura","theme"],
+    ["portrait","retrato","theme"],
+    ["landscape (art)","paisagem","theme"],
+    ["masterpiece","obra-prima","theme"],
+    ["artist","artista","theme"],
+  ],
+  [
+    ["to spend","gastar","verb"],
+    ["as soon as","assim que","grammar"],
+    ["melody","melodia","theme"],
+    ["rhythm","ritmo","theme"],
+    ["lyrics","letra","theme"],
+    ["chorus","refrão","theme"],
+    ["verse","estrofe","theme"],
+    ["harmony","harmonia","theme"],
+    ["instrument","instrumento","theme"],
+    ["guitar","guitarra","theme"],
+  ],
+  [
+    ["to lend","emprestar","verb"],
+    ["until","até que","grammar"],
+    ["video game","videojogo","theme"],
+    ["console","consola","theme"],
+    ["controller","comando","theme"],
+    ["game level","nível","theme"],
+    ["avatar","avatar","theme"],
+    ["quest","missão","theme"],
+    ["save file","ficheiro guardado","theme"],
+    ["achievement","conquista","theme"],
+  ],
+  [
+    ["to give back","devolver","verb"],
+    ["even if","mesmo que","grammar"],
+    ["perfume","perfume","theme"],
+    ["fragrance","fragrância","theme"],
+    ["scent","aroma","theme"],
+    ["perfume notes","notas","theme"],
+    ["top note","nota de topo","theme"],
+    ["base note","nota de fundo","theme"],
+    ["longevity (perfume)","duração","theme"],
+    ["projection (perfume)","projeção","theme"],
+  ],
+  [
+    ["to rent","alugar","verb"],
+    ["regarding","quanto a","grammar"],
+    ["pet","animal de estimação","theme"],
+    ["kitten","gatinho","theme"],
+    ["puppy","cachorro","theme"],
+    ["paw","pata","theme"],
+    ["tail","cauda","theme"],
+    ["whiskers","bigodes","theme"],
+    ["fur","pelo","theme"],
+    ["claw","garra","theme"],
+  ],
+  [
+    ["to move house","mudar-se","verb"],
+    ["in relation to","em relação a","grammar"],
+    ["calendar","calendário","theme"],
+    ["schedule","agenda","theme"],
+    ["reminder","lembrete","theme"],
+    ["alarm clock","despertador","theme"],
+    ["punctual","pontual","theme"],
+    ["late (adj)","atrasado","theme"],
+    ["early","cedo","theme"],
+    ["on time","a horas","theme"],
+  ],
+  [
+    ["to renovate","reformar","verb"],
+    ["according to","de acordo com","grammar"],
+    ["curriculum","currículo escolar","theme"],
+    ["syllabus","programa","theme"],
+    ["lecture","aula teórica","theme"],
+    ["seminar","seminário","theme"],
+    ["tutorial","tutorial","theme"],
+    ["assignment","trabalho","theme"],
+    ["essay","ensaio","theme"],
+    ["thesis","tese","theme"],
+  ],
+  [
+    ["to decorate","decorar","verb"],
+    ["through","através de","grammar"],
+    ["common sense","senso comum","theme"],
+    ["point of view","ponto de vista","theme"],
+    ["in my opinion","na minha opinião","theme"],
+    ["it depends","depende","theme"],
+    ["piece of cake (idiom)","canja","theme"],
+    ["to break the ice","quebrar o gelo","theme"],
+    ["kill two birds with one stone","matar dois coelhos de uma cajadada","theme"],
+    ["better late than never","mais vale tarde do que nunca","theme"],
+  ],
+  [
+    ["to sweep","varrer","verb"],
+    ["even so","apesar disso","grammar"],
+    ["wolf","lobo","theme"],
+    ["fox","raposa","theme"],
+    ["deer","veado","theme"],
+    ["squirrel","esquilo","theme"],
+    ["hedgehog","ouriço","theme"],
+    ["snake","cobra","theme"],
+    ["lizard","lagarto","theme"],
+    ["crocodile","crocodilo","theme"],
+  ],
+  [
+    ["to vacuum","aspirar","verb"],
+    ["meanwhile","entretanto","grammar"],
+    ["armbands","braçadeiras","theme"],
+    ["swimming goggles","óculos de natação","theme"],
+    ["swimming cap","touca de natação","theme"],
+    ["deep end","parte funda","theme"],
+    ["shallow end","parte rasa","theme"],
+    ["pool noodle","macarrão de piscina","theme"],
+    ["poolside","beira da piscina","theme"],
+    ["sun lounger","espreguiçadeira","theme"],
+  ],
+  [
+    ["to iron","passar a ferro","verb"],
+    ["finally","finalmente","grammar"],
+    ["stretching","alongamento","theme"],
+    ["cardio","cardio","theme"],
+    ["muscle","músculo","theme"],
+    ["endurance","resistência","theme"],
+    ["strength","força","theme"],
+    ["flexibility","flexibilidade","theme"],
+    ["football","futebol","theme"],
+    ["basketball","basquetebol","theme"],
+  ],
+  [
+    ["to fold","dobrar","verb"],
+    ["first(ly)","primeiro","grammar"],
+    ["measuring cup","copo medidor","theme"],
+    ["kitchen scale","balança de cozinha","theme"],
+    ["flour","farinha","theme"],
+    ["yeast","fermento","theme"],
+    ["sourdough starter","massa mãe","theme"],
+    ["dough","massa","theme"],
+    ["crust","côdea","theme"],
+    ["crumb (bread)","miolo","theme"],
+  ],
+  [
+    ["to hang","pendurar","verb"],
+    ["after that","depois disso","grammar"],
+    ["tip","gorjeta","theme"],
+    ["receipt","recibo","theme"],
+    ["special of the day","prato do dia","theme"],
+    ["wine list","carta de vinhos","theme"],
+    ["food allergy","alergia alimentar","theme"],
+    ["vegetarian","vegetariano","theme"],
+    ["vegan","vegan","theme"],
+    ["gluten-free","sem glúten","theme"],
+  ],
+  [
+    ["to wrap","embrulhar","verb"],
+    ["lastly","por fim","grammar"],
+    ["arrival","chegada","theme"],
+    ["delay","atraso","theme"],
+    ["connection (flight)","ligação","theme"],
+    ["layover","escala","theme"],
+    ["gate (airport)","porta de embarque","theme"],
+    ["luggage","bagagem","theme"],
+    ["carry-on","bagagem de mão","theme"],
+    ["check-in","registo","theme"],
+  ],
+  [
+    ["to recycle","reciclar","verb"],
+    ["firstly","em primeiro lugar","grammar"],
+    ["fog","nevoeiro","theme"],
+    ["frost","geada","theme"],
+    ["hail","granizo","theme"],
+    ["breeze","brisa","theme"],
+    ["gale","vendaval","theme"],
+    ["heatwave","onda de calor","theme"],
+    ["drought","seca","theme"],
+    ["flood","inundação","theme"],
+  ],
+  [
+    ["to pollute","poluir","verb"],
+    ["secondly","em segundo lugar","grammar"],
+    ["app","aplicação","theme"],
+    ["software","software","theme"],
+    ["hardware","hardware","theme"],
+    ["update","atualização","theme"],
+    ["bug (software)","erro","theme"],
+    ["file","ficheiro","theme"],
+    ["folder","pasta","theme"],
+    ["attachment","anexo","theme"],
+  ],
+  [
+    ["to reduce","reduzir","verb"],
+    ["above all","sobretudo","grammar"],
+    ["report","relatório","theme"],
+    ["spreadsheet","folha de cálculo","theme"],
+    ["invoice","fatura","theme"],
+    ["feedback","retorno","theme"],
+    ["performance","desempenho","theme"],
+    ["promotion (career)","promoção","theme"],
+    ["pay raise","aumento salarial","theme"],
+    ["resignation","demissão","theme"],
+  ],
+  [
+    ["to increase","aumentar","verb"],
+    ["mainly","principalmente","grammar"],
+    ["installment","prestação","theme"],
+    ["discount","desconto","theme"],
+    ["sale (shop)","saldos","theme"],
+    ["bargain","pechincha","theme"],
+    ["refund","reembolso","theme"],
+    ["exchange (return item)","troca","theme"],
+    ["warranty","garantia","theme"],
+    ["overdraft","descoberto","theme"],
+  ],
+  [
+    ["to decrease","diminuir","verb"],
+    ["basically","basicamente","grammar"],
+    ["paint (noun)","tinta","theme"],
+    ["wallpaper","papel de parede","theme"],
+    ["wall tile","azulejo","theme"],
+    ["floor tile","ladrilho","theme"],
+    ["skirting board","rodapé","theme"],
+    ["doorbell","campainha","theme"],
+    ["balcony","varanda","theme"],
+    ["terrace (house)","terraço","theme"],
+  ],
+  [
+    ["to improve","melhorar","verb"],
+    ["actually","na verdade","grammar"],
+    ["official stamp","carimbo","theme"],
+    ["form (document)","formulário","theme"],
+    ["application","candidatura","theme"],
+    ["queue number","senha","theme"],
+    ["fine (penalty)","multa","theme"],
+    ["parking ticket","multa de estacionamento","theme"],
+    ["police station","esquadra","theme"],
+    ["embassy","embaixada","theme"],
+  ],
+  [
+    ["to worsen","piorar","verb"],
+    ["in fact","de facto","grammar"],
+    ["X-ray","raio-X","theme"],
+    ["routine checkup","consulta de rotina","theme"],
+    ["emergency room","urgências","theme"],
+    ["waiting room","sala de espera","theme"],
+    ["dentist","dentista","theme"],
+    ["optician","oftalmologista","theme"],
+    ["physiotherapist","fisioterapeuta","theme"],
+    ["therapist","terapeuta","theme"],
+  ],
+  [
+    ["to develop","desenvolver","verb"],
+    ["by the way / actually","aliás","grammar"],
+    ["selfish","egoísta","theme"],
+    ["honest","honesto","theme"],
+    ["dishonest","desonesto","theme"],
+    ["curious","curioso","theme"],
+    ["shy","tímido","theme"],
+    ["outgoing","extrovertido","theme"],
+    ["sensitive","sensível","theme"],
+    ["moody","instável","theme"],
+  ],
+  [
+    ["to create","criar","verb"],
+    ["at least","pelo menos","grammar"],
+    ["romantic date","encontro","theme"],
+    ["flirtation","flerte","theme"],
+    ["trust (relationship)","confiança","theme"],
+    ["jealousy","ciúme","theme"],
+    ["argument (dispute)","discussão","theme"],
+    ["compromise","entendimento","theme"],
+    ["emotional support","apoio","theme"],
+    ["closeness","proximidade","theme"],
+  ],
+  [
+    ["to invent","inventar","verb"],
+    ["at most","no máximo","grammar"],
+    ["plastic waste","resíduos plásticos","theme"],
+    ["single-use plastic","plástico de utilização única","theme"],
+    ["compost","compostagem","theme"],
+    ["landfill","aterro sanitário","theme"],
+    ["ecosystem","ecossistema","theme"],
+    ["biodiversity","biodiversidade","theme"],
+    ["extinction","extinção","theme"],
+    ["conservation","conservação","theme"],
+  ],
+  [
+    ["to discover","descobrir","verb"],
+    ["in general","em geral","grammar"],
+    ["polka dot","bolinha","theme"],
+    ["plaid / checkered","xadrez","theme"],
+    ["fitted","justo","theme"],
+    ["loose","largo","theme"],
+    ["tight","apertado","theme"],
+    ["oversized","largo demais","theme"],
+    ["outfit","conjunto","theme"],
+    ["accessory","acessório","theme"],
+  ],
+  [
+    ["to investigate","investigar","verb"],
+    ["normally","normalmente","grammar"],
+    ["sculptor","escultor","theme"],
+    ["curator","curador","theme"],
+    ["canvas","tela","theme"],
+    ["frame (art)","moldura","theme"],
+    ["paintbrush","pincel","theme"],
+    ["palette","paleta","theme"],
+    ["theatre","teatro","theme"],
+    ["play (theatre)","peça de teatro","theme"],
+  ],
+  [
+    ["to research","pesquisar","verb"],
+    ["generally","geralmente","grammar"],
+    ["piano","piano","theme"],
+    ["drums","bateria","theme"],
+    ["violin","violino","theme"],
+    ["singer","cantor","theme"],
+    ["band","banda","theme"],
+    ["album","álbum","theme"],
+    ["playlist","lista de reprodução","theme"],
+    ["streaming","streaming","theme"],
+  ],
+  [
+    ["to analyse","analisar","verb"],
+    ["rarely","raramente","grammar"],
+    ["multiplayer","multijogador","theme"],
+    ["leaderboard","tabela de classificação","theme"],
+    ["strategy game","jogo de estratégia","theme"],
+    ["puzzle","puzzle","theme"],
+    ["board game","jogo de tabuleiro","theme"],
+    ["card game","jogo de cartas","theme"],
+    ["dice","dados","theme"],
+    ["chess","xadrez","theme"],
+  ],
+  [
+    ["to conclude","concluir","verb"],
+    ["frequently","frequentemente","grammar"],
+    ["perfume sample","amostra","theme"],
+    ["decant","decantar","theme"],
+    ["niche perfume","perfume de nicho","theme"],
+    ["skincare","cuidados de pele","theme"],
+    ["moisturizer","hidratante","theme"],
+    ["serum","sérum","theme"],
+    ["cleanser","produto de limpeza","theme"],
+    ["toner","tónico","theme"],
+  ],
+  [
+    ["to summarize","resumir","verb"],
+    ["constantly","constantemente","grammar"],
+    ["purr","ronronar","theme"],
+    ["meow","miar","theme"],
+    ["bark (dog sound)","ladrar","theme"],
+    ["leash","trela","theme"],
+    ["collar","coleira","theme"],
+    ["litter box","caixa de areia","theme"],
+    ["cat food","ração para gatos","theme"],
+    ["vet","veterinário","theme"],
+  ],
+  [
+    ["to translate","traduzir","verb"],
+    ["occasionally","ocasionalmente","grammar"],
+    ["overdue","em atraso","theme"],
+    ["postponement","adiamento","theme"],
+    ["recurring","recorrente","theme"],
+    ["weekly","semanal","theme"],
+    ["monthly","mensal","theme"],
+    ["daily","diário","theme"],
+    ["annual","anual","theme"],
+    ["biweekly","quinzenal","theme"],
+  ],
+  [
+    ["to pronounce","pronunciar","verb"],
+    ["hardly","dificilmente","grammar"],
+    ["degree (academic)","licenciatura","theme"],
+    ["diploma","diploma","theme"],
+    ["scholarship","bolsa de estudo","theme"],
+    ["tuition fees","propinas","theme"],
+    ["campus","campus","theme"],
+    ["dormitory","residência universitária","theme"],
+    ["classmate","colega de turma","theme"],
+    ["lecture hall","anfiteatro","theme"],
+  ],
+  [
+    ["to spell","soletrar","verb"],
+    ["probably","provavelmente","grammar"],
+    ["practice makes perfect","a prática leva à perfeição","theme"],
+    ["actions speak louder than words","falar é fácil, agir é que é difícil","theme"],
+    ["once in a blue moon","muito raramente","theme"],
+    ["speak of the devil","falar no diabo","theme"],
+    ["costs an arm and a leg","custa os olhos da cara","theme"],
+    ["it's raining cats and dogs","está a chover a potes","theme"],
+    ["to hit the nail on the head","acertar em cheio","theme"],
+    ["under the weather","sentir-se em baixo","theme"],
+  ],
+  [
+    ["to underline","sublinhar","verb"],
+    ["certainly","certamente","grammar"],
+    ["turtle","tartaruga","theme"],
+    ["frog","rã","theme"],
+    ["owl","coruja","theme"],
+    ["eagle","águia","theme"],
+    ["hawk","falcão","theme"],
+    ["peacock","pavão","theme"],
+    ["flamingo","flamingo","theme"],
+    ["penguin","pinguim","theme"],
+  ],
+  [
+    ["to erase / turn off","apagar","verb"],
+    ["possibly","possivelmente","grammar"],
+    ["beach umbrella","chapéu de sol","theme"],
+    ["splash","salpico","theme"],
+    ["wave","onda","theme"],
+    ["current","corrente","theme"],
+    ["tide","maré","theme"],
+    ["float (object)","boia","theme"],
+    ["snorkel","tubo de respiração","theme"],
+    ["flippers","barbatanas","theme"],
+  ],
+  [
+    ["to charge / load","carregar","verb"],
+    ["unfortunately","infelizmente","grammar"],
+    ["tennis","ténis","theme"],
+    ["volleyball","voleibol","theme"],
+    ["running","corrida","theme"],
+    ["cycling","ciclismo","theme"],
+    ["hiking","caminhada","theme"],
+    ["climbing","escalada","theme"],
+    ["boxing","boxe","theme"],
+    ["martial arts","artes marciais","theme"],
+  ],
+  [
+    ["to download / unload","descarregar","verb"],
+    ["fortunately","felizmente","grammar"],
+    ["to knead","amassar","theme"],
+    ["to rise (dough)","levedar","theme"],
+    ["to roast / bake","assar","theme"],
+    ["recipe","receita","theme"],
+    ["ingredient","ingrediente","theme"],
+    ["teaspoon","colher de chá","theme"],
+    ["tablespoon","colher de sopa","theme"],
+    ["pinch (of salt)","pitada","theme"],
+  ],
+  [
+    ["to install","instalar","verb"],
+    ["surprisingly","surpreendentemente","grammar"],
+    ["spicy","picante","theme"],
+    ["bland","insípido","theme"],
+    ["overcooked","cozinhado demais","theme"],
+    ["undercooked","mal cozinhado","theme"],
+    ["delicious","delicioso","theme"],
+    ["tasty","saboroso","theme"],
+    ["fresh","fresco","theme"],
+    ["homemade","caseiro","theme"],
+  ],
+  [
+    ["to update","atualizar","verb"],
+    ["obviously","obviamente","grammar"],
+    ["boarding","embarque","theme"],
+    ["runway","pista","theme"],
+    ["flight attendant","assistente de bordo","theme"],
+    ["pilot","piloto","theme"],
+    ["seatbelt","cinto de segurança","theme"],
+    ["turbulence","turbulência","theme"],
+    ["jet lag","jet lag","theme"],
+    ["itinerary","itinerário","theme"],
+  ],
+  [
+    ["to set up","configurar","verb"],
+    ["clearly","claramente","grammar"],
+    ["rainbow","arco-íris","theme"],
+    ["sunrise","nascer do sol","theme"],
+    ["sunset","pôr do sol","theme"],
+    ["shade","sombra","theme"],
+    ["puddle","poça","theme"],
+    ["umbrella","guarda-chuva","theme"],
+    ["raincoat","impermeável","theme"],
+    ["rain boots","botas de chuva","theme"],
+  ],
+  [
+    ["to turn on / call","ligar","verb"],
+    ["apparently","aparentemente","grammar"],
+    ["transfer / download","transferência","theme"],
+    ["upload","envio","theme"],
+    ["cloud storage","armazenamento na nuvem","theme"],
+    ["backup","cópia de segurança","theme"],
+    ["username","nome de utilizador","theme"],
+    ["account","conta","theme"],
+    ["settings","definições","theme"],
+    ["notification","notificação","theme"],
+  ],
+  [
+    ["to turn off / hang up","desligar","verb"],
+    ["sincerely / honestly","sinceramente","grammar"],
+    ["onboarding","integração","theme"],
+    ["teamwork","trabalho em equipa","theme"],
+    ["leadership","liderança","theme"],
+    ["negotiation","negociação","theme"],
+    ["networking","networking","theme"],
+    ["conference","conferência","theme"],
+    ["workshop","oficina","theme"],
+    ["webinar","webinar","theme"],
+  ],
+  [
+    ["to record","gravar","verb"],
+    ["personally","pessoalmente","grammar"],
+    ["price tag","etiqueta de preço","theme"],
+    ["checkout","caixa","theme"],
+    ["cashier","operador de caixa","theme"],
+    ["fitting room","provador","theme"],
+    ["clothing size","tamanho","theme"],
+    ["customer","cliente","theme"],
+    ["customer service","apoio ao cliente","theme"],
+    ["online shopping","compras online","theme"],
+  ],
+  [
+    ["to edit","editar","verb"],
+    ["exactly","exatamente","grammar"],
+    ["courtyard","pátio","theme"],
+    ["attic","sótão","theme"],
+    ["basement","cave","theme"],
+    ["garage","garagem","theme"],
+    ["storage room","arrecadação","theme"],
+    ["shelf","prateleira","theme"],
+    ["drawer","gaveta","theme"],
+    ["cushion","almofada","theme"],
+  ],
+  [
+    ["to publish / post","publicar","verb"],
+    ["approximately","aproximadamente","grammar"],
+    ["consulate","consulado","theme"],
+    ["citizenship","cidadania","theme"],
+    ["registration","registo","theme"],
+    ["proof of address","comprovativo de morada","theme"],
+    ["health insurance","seguro de saúde","theme"],
+    ["public transport pass","passe de transportes","theme"],
+    ["recycling point","ecoponto","theme"],
+    ["town square","praça","theme"],
+  ],
+  [
+    ["to share","partilhar","verb"],
+    ["completely","completamente","grammar"],
+    ["mental health","saúde mental","theme"],
+    ["stress","stress","theme"],
+    ["anxiety","ansiedade","theme"],
+    ["depression","depressão","theme"],
+    ["insomnia","insónia","theme"],
+    ["fatigue","fadiga","theme"],
+    ["recovery","recuperação","theme"],
+    ["chronic","crónico","theme"],
+  ],
+  [
+    ["to comment","comentar","verb"],
+    ["totally","totalmente","grammar"],
+    ["optimistic","otimista","theme"],
+    ["pessimistic","pessimista","theme"],
+    ["grateful","grato","theme"],
+    ["jealous","ciumento","theme"],
+    ["proud","orgulhoso","theme"],
+    ["humble","humilde","theme"],
+    ["arrogant","arrogante","theme"],
+    ["reliable","fiável","theme"],
+  ],
+  [
+    ["to follow","seguir","verb"],
+    ["partially","parcialmente","grammar"],
+    ["emotional distance","distância","theme"],
+    ["best friend","melhor amigo","theme"],
+    ["acquaintance","conhecido","theme"],
+    ["roommate","colega de casa","theme"],
+    ["in-laws","sogros","theme"],
+    ["stepfather","padrasto","theme"],
+    ["stepmother","madrasta","theme"],
+    ["half-sibling","meio-irmão","theme"],
+  ],
+  [
+    ["to react","reagir","verb"],
+    ["practically","praticamente","grammar"],
+    ["deforestation","desflorestação","theme"],
+    ["reforestation","reflorestação","theme"],
+    ["greenhouse effect","efeito de estufa","theme"],
+    ["global warming","aquecimento global","theme"],
+    ["ozone layer","camada de ozono","theme"],
+    ["natural resource","recurso natural","theme"],
+    ["fossil fuel","combustível fóssil","theme"],
+    ["second-hand","em segunda mão","theme"],
+  ],
+  [
+    ["to vote","votar","verb"],
+    ["especially","especialmente","grammar"],
+    ["jewelry","joias","theme"],
+    ["earrings","brincos","theme"],
+    ["necklace","colar","theme"],
+    ["bracelet","pulseira","theme"],
+    ["ring (jewelry)","anel","theme"],
+    ["handbag","mala de mão","theme"],
+    ["wallet","carteira","theme"],
+    ["sunglasses","óculos de sol","theme"],
+  ],
+  [
+    ["to protest","protestar","verb"],
+    ["particularly","particularmente","grammar"],
+    ["actor","ator","theme"],
+    ["actress","atriz","theme"],
+    ["audience","plateia","theme"],
+    ["stage","palco","theme"],
+    ["script","guião","theme"],
+    ["rehearsal","ensaio","theme"],
+    ["ballet","ballet","theme"],
+    ["opera","ópera","theme"],
+  ],
+  [
+    ["to negotiate","negociar","verb"],
+    ["immediately","imediatamente","grammar"],
+    ["soundtrack","banda sonora","theme"],
+    ["music genre","género musical","theme"],
+    ["festival","festival","theme"],
+    ["concert","concerto","theme"],
+    ["event ticket","bilhete","theme"],
+    ["encore","bis","theme"],
+    ["fan (music)","fã","theme"],
+    ["podcast","podcast","theme"],
+  ],
+  [
+    ["to argue / discuss","discutir","verb"],
+    ["recently","recentemente","grammar"],
+    ["crossword","palavras cruzadas","theme"],
+    ["hobby","passatempo","theme"],
+    ["collection (hobby)","coleção","theme"],
+    ["knitting","tricô","theme"],
+    ["sewing","costura","theme"],
+    ["gardening","jardinagem","theme"],
+    ["photography (hobby)","fotografia","theme"],
+    ["woodworking","marcenaria","theme"],
+  ],
+  [
+    ["to reconcile","reconciliar","verb"],
+    ["currently","atualmente","grammar"],
+    ["exfoliate","esfoliar","theme"],
+    ["makeup","maquilhagem","theme"],
+    ["foundation (makeup)","base","theme"],
+    ["mascara","rímel","theme"],
+    ["lipstick","batom","theme"],
+    ["blush","blush","theme"],
+    ["eyeshadow","sombra","theme"],
+    ["concealer","corretor","theme"],
+  ],
+  [
+    ["to forgive","perdoar","verb"],
+    ["previously","anteriormente","grammar"],
+    ["vaccination (pet)","vacinação","theme"],
+    ["microchip","microchip","theme"],
+    ["pet sitter","cuidador de animais","theme"],
+    ["scratching post","poste para arranhar","theme"],
+    ["aquarium","aquário","theme"],
+    ["pet cage","gaiola","theme"],
+    ["hamster","hamster","theme"],
+    ["guinea pig","porquinho-da-índia","theme"],
+  ],
+  [
+    ["to thank","agradecer","verb"],
+    ["subsequently","posteriormente","grammar"],
+    ["routine","rotina","theme"],
+    ["free time","tempo livre","theme"],
+    ["downtime","tempo de pausa","theme"],
+    ["rush hour","hora de ponta","theme"],
+    ["curfew","toque de recolher","theme"],
+    ["countdown","contagem decrescente","theme"],
+    ["timezone","fuso horário","theme"],
+    ["daylight saving time","horário de verão","theme"],
+  ],
+  [
+    ["to apologize","desculpar-se","verb"],
+    ["simultaneously","simultaneamente","grammar"],
+    ["whiteboard","quadro branco","theme"],
+    ["projector","projetor","theme"],
+    ["textbook","manual escolar","theme"],
+    ["dictionary","dicionário","theme"],
+    ["grammar","gramática","theme"],
+    ["vocabulary","vocabulário","theme"],
+    ["pronunciation","pronúncia","theme"],
+    ["fluency","fluência","theme"],
+  ],
+  [
+    ["to greet","cumprimentar","verb"],
+    ["gradually","gradualmente","grammar"],
+    ["peace of mind","descanso","theme"],
+    ["food for thought","matéria para reflexão","theme"],
+    ["easier said than done","falar é fácil, fazer é que são elas","theme"],
+    ["time flies","o tempo voa","theme"],
+    ["better safe than sorry","é melhor prevenir do que remediar","theme"],
+    ["out of the blue","do nada","theme"],
+    ["on the ball","atento","theme"],
+    ["crystal clear","claríssimo","theme"],
+  ],
+  [
+    ["to introduce / present","apresentar","verb"],
+    ["slowly","lentamente","grammar"],
+    ["seal","foca","theme"],
+    ["dolphin","golfinho","theme"],
+    ["whale","baleia","theme"],
+    ["shark","tubarão","theme"],
+    ["octopus","polvo","theme"],
+    ["jellyfish","alforreca","theme"],
+    ["crab","caranguejo","theme"],
+    ["starfish","estrela-do-mar","theme"],
+  ],
+  [
+    ["to convince","convencer","verb"],
+    ["quickly","rapidamente","grammar"],
+    ["sunbathing","apanhar sol","theme"],
+    ["chlorine","cloro","theme"],
+    ["locker room","vestiário","theme"],
+    ["shower","duche","theme"],
+    ["poolside bar","bar da piscina","theme"],
+    ["water polo","pólo aquático","theme"],
+    ["backstroke","costas (nado)","theme"],
+    ["breaststroke","bruços","theme"],
+  ],
+  [
+    ["to persuade","persuadir","verb"],
+    ["carefully","cuidadosamente","grammar"],
+    ["team","equipa","theme"],
+    ["opponent","adversário","theme"],
+    ["referee","árbitro","theme"],
+    ["score","resultado","theme"],
+    ["goal","golo","theme"],
+    ["match","jogo","theme"],
+    ["championship","campeonato","theme"],
+    ["league","liga","theme"],
+  ],
+  [
+    ["to force","obrigar","verb"],
+    ["easily","facilmente","grammar"],
+    ["slice","fatia","theme"],
+    ["loaf","pão de forma","theme"],
+    ["to crumble","esfarelar","theme"],
+    ["to simmer","cozinhar em lume brando","theme"],
+    ["to boil","ferver","theme"],
+    ["to fry","fritar","theme"],
+    ["to grill","grelhar","theme"],
+    ["to steam","cozer a vapor","theme"],
+  ],
+  [
+    ["to prevent","impedir","verb"],
+    ["seriously","seriamente","grammar"],
+    ["takeout box","caixa para levar","theme"],
+    ["service (restaurant)","serviço","theme"],
+    ["kitchen (restaurant)","cozinha","theme"],
+    ["chef","chefe de cozinha","theme"],
+    ["sommelier","sommelier","theme"],
+    ["terrace","esplanada","theme"],
+    ["outdoor seating","lugares ao ar livre","theme"],
+    ["booking","marcação","theme"],
+  ],
+  [
+    ["to delay","atrasar","verb"],
+    ["really","realmente","grammar"],
+    ["destination","destino","theme"],
+    ["route","rota","theme"],
+    ["map","mapa","theme"],
+    ["compass","bússola","theme"],
+    ["guidebook","guia de viagem","theme"],
+    ["tour guide","guia turístico","theme"],
+    ["sightseeing","passeios turísticos","theme"],
+    ["landmark","marco histórico","theme"],
+  ],
+  [
+    ["to hurry","apressar-se","verb"],
+    ["truly","verdadeiramente","grammar"],
+    ["mild","ameno","theme"],
+    ["humid","húmido","theme"],
+    ["dry","seco","theme"],
+    ["windy","ventoso","theme"],
+    ["cloudy","nublado","theme"],
+    ["sunny","soalheiro","theme"],
+    ["freezing","gélido","theme"],
+    ["mild climate","clima ameno","theme"],
+  ],
+  [
+    ["to relax","relaxar","verb"],
+    ["definitely","definitivamente","grammar"],
+    ["browser","navegador","theme"],
+    ["search engine","motor de busca","theme"],
+    ["website","site","theme"],
+    ["link","ligação","theme"],
+    ["click","clique","theme"],
+    ["scroll","deslizar","theme"],
+    ["social media","redes sociais","theme"],
+    ["post (noun)","publicação","theme"],
+  ],
+  [
+    ["to rest","descansar","verb"],
+    ["absolutely","absolutamente","grammar"],
+    ["stakeholder","parte interessada","theme"],
+    ["shareholder","acionista","theme"],
+    ["revenue","receita","theme"],
+    ["profit","lucro","theme"],
+    ["loss","prejuízo","theme"],
+    ["growth","crescimento","theme"],
+    ["market share","quota de mercado","theme"],
+    ["competitor","concorrente","theme"],
+  ],
+  [
+    ["to exercise","exercitar-se","verb"],
+    ["relatively","relativamente","grammar"],
+    ["delivery fee","taxa de entrega","theme"],
+    ["tracking number","número de rastreio","theme"],
+    ["shopping cart","carrinho","theme"],
+    ["wishlist","lista de desejos","theme"],
+    ["subscription","subscrição","theme"],
+    ["membership","adesão","theme"],
+    ["loyalty card","cartão de fidelização","theme"],
+    ["personal budget","orçamento pessoal","theme"],
+  ],
+  [
+    ["to train","treinar","verb"],
+    ["extremely","extremamente","grammar"],
+    ["curtain","cortina","theme"],
+    ["window blind","estore","theme"],
+    ["rug","tapete","theme"],
+    ["vase","jarra","theme"],
+    ["candle","vela","theme"],
+    ["plant pot","vaso de planta","theme"],
+    ["broom","vassoura","theme"],
+    ["mop","esfregona","theme"],
+  ],
+  [
+    ["to stretch","alongar","verb"],
+    ["quite / enough","bastante","grammar"],
+    ["neighbourhood","bairro","theme"],
+    ["municipality","concelho","theme"],
+    ["district","distrito","theme"],
+    ["zoning","zoneamento","theme"],
+    ["public holiday","feriado","theme"],
+    ["strike (labour)","greve","theme"],
+    ["protest","manifestação","theme"],
+    ["election","eleição","theme"],
+  ],
+  [
+    ["to breathe","respirar","verb"],
+    ["too much","demasiado","grammar"],
+    ["allergic reaction","reação alérgica","theme"],
+    ["side effect","efeito secundário","theme"],
+    ["dosage","dosagem","theme"],
+    ["painkiller","analgésico","theme"],
+    ["antibiotic","antibiótico","theme"],
+    ["bandage","ligadura","theme"],
+    ["plaster / band-aid","penso rápido","theme"],
+    ["crutches","canadianas","theme"],
+  ],
+  [
+    ["to sweat","suar","verb"],
+    ["only","apenas","grammar"],
+    ["loyal","leal","theme"],
+    ["disloyal","desleal","theme"],
+    ["independent","independente","theme"],
+    ["dependent","dependente","theme"],
+    ["mature","maduro","theme"],
+    ["immature","imaturo","theme"],
+    ["creative","criativo","theme"],
+    ["practical","prático","theme"],
+  ],
+  [
+    ["to swim","nadar","verb"],
+    ["only (formal)","somente","grammar"],
+    ["godparent","padrinho","theme"],
+    ["guest","convidado","theme"],
+    ["host","anfitrião","theme"],
+    ["invitation","convite","theme"],
+    ["get-together","convívio","theme"],
+    ["reunion","reencontro","theme"],
+    ["gossip","fofoca","theme"],
+    ["rumor","rumor","theme"],
+  ],
+  [
+    ["to dive","mergulhar","verb"],
+    ["even (in negatives)","sequer","grammar"],
+    ["repair (noun)","reparação","theme"],
+    ["durability","durabilidade","theme"],
+    ["eco-friendly","ecológico","theme"],
+    ["organic","biológico","theme"],
+    ["fair trade","comércio justo","theme"],
+    ["supply chain","cadeia de abastecimento","theme"],
+    ["packaging","embalagem","theme"],
+    ["refurbished","recondicionado","theme"],
+  ],
+  [
+    ["to float","flutuar","verb"],
+    ["even / same","mesmo","grammar"],
+    ["tie (necktie)","gravata","theme"],
+    ["blazer","blazer","theme"],
+    ["cardigan","casaco de malha","theme"],
+    ["hoodie","sweatshirt com capuz","theme"],
+    ["sweatpants","calças de fato de treino","theme"],
+    ["pajamas","pijama","theme"],
+    ["underwear","roupa interior","theme"],
+    ["boots","botas","theme"],
+  ],
+  [
+    ["to row","remar","verb"],
+    ["such as","tal como","grammar"],
+    ["orchestra","orquestra","theme"],
+    ["choir","coro","theme"],
+    ["concert hall","sala de concertos","theme"],
+    ["literature","literatura","theme"],
+    ["poetry","poesia","theme"],
+    ["novel","romance","theme"],
+    ["author","autor","theme"],
+    ["chapter","capítulo","theme"],
+  ],
+  [
+    ["to fish","pescar","verb"],
+    ["for example","por exemplo","grammar"],
+    ["episode","episódio","theme"],
+    ["TV season","temporada","theme"],
+    ["series","série","theme"],
+    ["subtitle","legenda","theme"],
+    ["dubbing","dobragem","theme"],
+    ["plot twist","reviravolta","theme"],
+    ["spoiler","spoiler","theme"],
+    ["cliffhanger","final em suspense","theme"],
+  ],
+  [
+    ["to plant","plantar","verb"],
+    ["instead of","em vez de","grammar"],
+    ["origami","origami","theme"],
+    ["scrapbooking","scrapbooking","theme"],
+    ["journaling","escrever num diário","theme"],
+    ["birdwatching","observação de aves","theme"],
+    ["stargazing","observação de estrelas","theme"],
+    ["model building","montagem de modelos","theme"],
+    ["DIY","faça você mesmo","theme"],
+    ["craft supplies","material de artesanato","theme"],
+  ],
+  [
+    ["to water (plants)","regar","verb"],
+    ["contrary to / unlike","ao contrário de","grammar"],
+    ["nail polish","verniz","theme"],
+    ["manicure","manicura","theme"],
+    ["pedicure","pedicura","theme"],
+    ["hairstyle","penteado","theme"],
+    ["haircut","corte de cabelo","theme"],
+    ["hairdresser","cabeleireiro","theme"],
+    ["beauty salon","salão de beleza","theme"],
+    ["spa","spa","theme"],
+  ],
+  [
+    ["to harvest","colher","verb"],
+    ["besides / apart from","além de","grammar"],
+    ["parrot","papagaio","theme"],
+    ["goldfish","peixinho dourado","theme"],
+    ["pet adoption","adoção","theme"],
+    ["animal shelter","abrigo de animais","theme"],
+    ["stray animal","animal vadio","theme"],
+    ["breed","raça","theme"],
+    ["to groom (a pet)","tosquiar","theme"],
+    ["nap","sesta","theme"],
+  ],
+  [
+    ["to prune","podar","verb"],
+    ["despite everything","apesar de tudo","grammar"],
+    ["leap year","ano bissexto","theme"],
+    ["decade","década","theme"],
+    ["era","era","theme"],
+    ["timeline","cronologia","theme"],
+    ["duration","duração","theme"],
+    ["interval","intervalo","theme"],
+    ["pause","pausa","theme"],
+    ["lunch break","pausa para almoço","theme"],
+  ],
+  [
+    ["to grow / cultivate","cultivar","verb"],
+    ["inside / within","dentro de","grammar"],
+    ["comprehension","compreensão","theme"],
+    ["listening skill","compreensão auditiva","theme"],
+    ["speaking skill","expressão oral","theme"],
+    ["writing skill","expressão escrita","theme"],
+    ["mark / grade","nota","theme"],
+    ["pass mark","nota mínima","theme"],
+    ["exam resit","exame de recurso","theme"],
+    ["plagiarism","plágio","theme"],
+  ],
+  [
+    ["to feed","alimentar","verb"],
+    ["outside of","fora de","grammar"],
+    ["last but not least","por último mas não menos importante","theme"],
+    ["in a nutshell","resumindo","theme"],
+    ["the ball is in your court","a decisão é tua","theme"],
+    ["to make a long story short","resumindo a história","theme"],
+    ["benefit of the doubt","benefício da dúvida","theme"],
+    ["common ground","pontos em comum","theme"],
+    ["turning point","ponto de viragem","theme"],
+    ["game changer","mudança radical","theme"],
+  ],
+  [
+    ["to educate / raise","educar","verb"],
+    ["close to","perto de","grammar"],
+    ["butterfly","borboleta","theme"],
+    ["bee","abelha","theme"],
+    ["spider","aranha","theme"],
+    ["ant","formiga","theme"],
+    ["mosquito","mosquito","theme"],
+    ["fly (insect)","mosca","theme"],
+    ["worm","minhoca","theme"],
+    ["cage","jaula","theme"],
+  ],
+  [
+    ["to punish","castigar","verb"],
+    ["far from","longe de","grammar"],
+    ["freestyle","crol","theme"],
+    ["butterfly stroke","mariposa","theme"],
+    ["swimming lane","pista","theme"],
+    ["lap (swimming)","volta","theme"],
+    ["water depth","profundidade","theme"],
+    ["water temperature","temperatura da água","theme"],
+    ["splash pad","zona de chapinhar","theme"],
+    ["inflatable","insuflável","theme"],
+  ],
+  [
+    ["to praise","elogiar","verb"],
+    ["next to","ao lado de","grammar"],
+    ["tournament","torneio","theme"],
+    ["medal","medalha","theme"],
+    ["trophy","troféu","theme"],
+    ["sports record","recorde","theme"],
+    ["coach","treinador","theme"],
+    ["fan (supporter)","adepto","theme"],
+    ["stadium","estádio","theme"],
+    ["pitch / field","campo","theme"],
+  ],
+  [
+    ["to approve / pass an exam","aprovar","verb"],
+    ["in front of","em frente de","grammar"],
+    ["to marinate","marinar","theme"],
+    ["to season","temperar","theme"],
+    ["to stir","mexer","theme"],
+    ["to chop","picar","theme"],
+    ["to grate","ralar","theme"],
+    ["to peel","descascar","theme"],
+    ["to blend","triturar","theme"],
+    ["to mix","misturar","theme"],
+  ],
+  [
+    ["to fail an exam","reprovar","verb"],
+    ["behind","atrás de","grammar"],
+    ["queue","fila","theme"],
+    ["bill","conta","theme"],
+    ["to split the bill","dividir a conta","theme"],
+    ["cash","dinheiro","theme"],
+    ["card payment","pagamento por cartão","theme"],
+    ["service charge","taxa de serviço","theme"],
+    ["happy hour","happy hour","theme"],
+    ["brunch","brunch","theme"],
+  ],
+  [
+    ["to enrol","matricular-se","verb"],
+    ["underneath","debaixo de","grammar"],
+    ["souvenir","lembrança","theme"],
+    ["accommodation","alojamento","theme"],
+    ["hostel","albergue","theme"],
+    ["hotel room","quarto de hotel","theme"],
+    ["check-out","saída","theme"],
+    ["receptionist","rececionista","theme"],
+    ["currency exchange","câmbio","theme"],
+    ["foreign","estrangeiro","theme"],
+  ],
+  [
+    ["to graduate","formar-se","verb"],
+    ["above / on top of","por cima de","grammar"],
+    ["seasonal","sazonal","theme"],
+    ["equinox","equinócio","theme"],
+    ["solstice","solstício","theme"],
+    ["overcast","encoberto","theme"],
+    ["chilly","frio ameno","theme"],
+    ["scorching","escaldante","theme"],
+    ["damp","húmido","theme"],
+    ["gust","rajada","theme"],
+  ],
+  [
+    ["to apply","candidatar-se","verb"],
+    ["between","entre","grammar"],
+    ["follower","seguidor","theme"],
+    ["comment (noun)","comentário","theme"],
+    ["like (noun)","gosto","theme"],
+    ["hashtag","hashtag","theme"],
+    ["video call","videochamada","theme"],
+    ["screenshot","captura de ecrã","theme"],
+    ["firewall","firewall","theme"],
+    ["computer virus","vírus","theme"],
+  ],
+  [
+    ["to hire","contratar","verb"],
+    ["during","durante","grammar"],
+    ["supplier","fornecedor","theme"],
+    ["partnership","parceria","theme"],
+    ["merger","fusão","theme"],
+    ["product launch","lançamento","theme"],
+    ["pitch (business)","proposta","theme"],
+    ["milestone","marco","theme"],
+    ["metric / KPI","indicador","theme"],
+    ["overtime","horas extra","theme"],
+  ],
+  [
+    ["to fire (someone)","despedir","verb"],
+    ["since (time)","desde","grammar"],
+    ["expense","despesa","theme"],
+    ["income","rendimento","theme"],
+    ["bonus","bónus","theme"],
+    ["tax return","declaração de IRS","theme"],
+    ["allowance","mesada","theme"],
+    ["pocket money","dinheiro de bolso","theme"],
+    ["currency","moeda","theme"],
+    ["exchange rate","taxa de câmbio","theme"],
+  ],
+  [
+    ["to resign","demitir-se","verb"],
+    ["by means of","por meio de","grammar"],
+    ["bucket","balde","theme"],
+    ["vacuum cleaner","aspirador","theme"],
+    ["dustbin","caixote do lixo","theme"],
+    ["recycling bin","contentor de reciclagem","theme"],
+    ["doormat","capacho","theme"],
+    ["letterbox","caixa do correio","theme"],
+    ["intercom","intercomunicador","theme"],
+    ["alarm system","sistema de alarme","theme"],
+  ],
+  [
+    ["to retire","reformar-se","verb"],
+    ["starting from","a partir de","grammar"],
+    ["vote (noun)","voto","theme"],
+    ["council","conselho","theme"],
+    ["mayor","presidente da câmara","theme"],
+    ["regulation","regulamento","theme"],
+    ["permit","licença","theme"],
+    ["inspection","inspeção","theme"],
+    ["bureaucracy","burocracia","theme"],
+    ["paperwork","papelada","theme"],
+  ],
+  [
+    ["to stay (hotel)","hospedar-se","verb"],
+    ["throughout","ao longo de","grammar"],
+    ["wheelchair","cadeira de rodas","theme"],
+    ["pregnancy","gravidez","theme"],
+    ["immune system","sistema imunitário","theme"],
+    ["metabolism","metabolismo","theme"],
+    ["blood pressure","tensão arterial","theme"],
+    ["heart rate","ritmo cardíaco","theme"],
+    ["cholesterol","colesterol","theme"],
+    ["nutrition","nutrição","theme"],
+  ],
+  [
+    ["to book / reserve","reservar","verb"],
+    ["around (time)","por volta de","grammar"],
+    ["disciplined","disciplinado","theme"],
+    ["spontaneous","espontâneo","theme"],
+    ["cautious","cauteloso","theme"],
+    ["reckless","imprudente","theme"],
+    ["determined","determinado","theme"],
+    ["easygoing","descontraído","theme"],
+    ["overwhelmed","sobrecarregado","theme"],
+    ["frustrated","frustrado","theme"],
+  ],
+  [
+    ["to cancel","cancelar","verb"],
+    ["about / around","cerca de","grammar"],
+    ["apology","pedido de desculpas","theme"],
+    ["forgiveness","perdão","theme"],
+    ["reconciliation","reconciliação","theme"],
+    ["loneliness","solidão","theme"],
+    ["companionship","companhia","theme"],
+    ["bonding","ligação","theme"],
+    ["small talk","conversa fiada","theme"],
+    ["inside joke","piada interna","theme"],
+  ],
+  [
+    ["to postpone","adiar","verb"],
+    ["deep down","no fundo","grammar"],
+    ["upcycling","reaproveitamento criativo","theme"],
+    ["circular economy","economia circular","theme"],
+    ["waste management","gestão de resíduos","theme"],
+    ["water scarcity","escassez de água","theme"],
+    ["species","espécie","theme"],
+    ["habitat loss","perda de habitat","theme"],
+    ["conservationist","ambientalista","theme"],
+    ["activist","ativista","theme"],
+  ],
+  [
+    ["to confirm","confirmar","verb"],
+    ["from time to time","de vez em quando","grammar"],
+    ["sandals","sandálias","theme"],
+    ["heels (shoes)","saltos altos","theme"],
+    ["flat shoes","sapatos rasos","theme"],
+    ["fashion trend","tendência","theme"],
+    ["style","estilo","theme"],
+    ["vintage","vintage","theme"],
+    ["tailor","alfaiate","theme"],
+    ["dry cleaning","limpeza a seco","theme"],
+  ],
+  [
+    ["to check","verificar","verb"],
+    ["suddenly","de repente","grammar"],
+    ["plot (story)","enredo","theme"],
+    ["character (story)","personagem","theme"],
+    ["architecture","arquitetura","theme"],
+    ["monument","monumento","theme"],
+    ["heritage","património","theme"],
+    ["tradition","tradição","theme"],
+    ["folklore","folclore","theme"],
+    ["handicraft","artesanato","theme"],
+  ],
+  [
+    ["to revise / review","revisar","verb"],
+    ["little by little","aos poucos","grammar"],
+    ["premiere","estreia","theme"],
+    ["box office","bilheteira","theme"],
+    ["sequel","sequela","theme"],
+    ["trailer","trailer","theme"],
+    ["review (critique)","crítica","theme"],
+    ["rating","classificação","theme"],
+    ["binge-watch","maratonar","theme"],
+    ["comedy","comédia","theme"],
+  ],
+  [
+    ["to correct","corrigir","verb"],
+    ["soon","em breve","grammar"],
+    ["puzzle piece","peça de puzzle","theme"],
+    ["subscription box","caixa de subscrição","theme"],
+    ["fan fiction","fanfic","theme"],
+    ["cosplay","cosplay","theme"],
+    ["tabletop RPG","RPG de mesa","theme"],
+    ["speedrun","speedrun","theme"],
+    ["walkthrough","guia passo a passo","theme"],
+    ["easter egg (game)","easter egg","theme"],
+  ],
+  [
+    ["to sync","sincronizar","verb"],
+    ["a while ago","há pouco","grammar"],
+    ["massage","massagem","theme"],
+    ["facial treatment","tratamento facial","theme"],
+    ["eyebrows","sobrancelhas","theme"],
+    ["eyelashes","pestanas","theme"],
+    ["tweezers","pinça","theme"],
+    ["razor","lâmina de barbear","theme"],
+    ["deodorant","desodorizante","theme"],
+    ["lotion","loção","theme"],
+  ],
+  [
+    ["to risk","arriscar","verb"],
+    ["in a little while","daqui a pouco","grammar"],
+    ["to scratch (cat)","arranhar","theme"],
+    ["cuddle","mimo","theme"],
+    ["pet treat","guloseima","theme"],
+    ["chew toy","brinquedo de mastigar","theme"],
+    ["litter (kittens)","ninhada","theme"],
+    ["cattery","hotel para gatos","theme"],
+  ],
+  [
+    ["to doubt","duvidar","verb"],
+    ["again","de novo","grammar"],
+    ["work shift","turno","theme"],
+    ["part-time","a tempo parcial","theme"],
+    ["full-time","a tempo inteiro","theme"],
+    ["grace period","período de tolerância","theme"],
+  ],
+  [
+    ["to suspect","suspeitar","verb"],
+    ["again (alt.)","outra vez","grammar"],
+    ["citation","citação","theme"],
+    ["academic reference","referência","theme"],
+    ["research paper","artigo científico","theme"],
+    ["hypothesis","hipótese","theme"],
+    ["experiment","experiência","theme"],
+    ["conclusion","conclusão","theme"],
+    ["mentor","mentor","theme"],
+    ["internship","estágio","theme"],
+  ],
+  [
+    ["to trust","confiar","verb"],
+    ["for the first time","pela primeira vez","grammar"],
+    ["comfort zone","zona de conforto","theme"],
+    ["work in progress","trabalho em curso","theme"],
+    ["trial and error","tentativa e erro","theme"],
+    ["win-win situation","situação em que todos ganham","theme"],
+    ["double-edged sword","arma de dois gumes","theme"],
+    ["last resort","último recurso","theme"],
+    ["to double check","verificar novamente","theme"],
+    ["gut feeling","intuição","theme"],
+  ],
+  [
+    ["to distrust","desconfiar","verb"],
+    ["anyway","de qualquer maneira","grammar"],
+    ["enclosure","recinto","theme"],
+    ["zookeeper","tratador","theme"],
+    ["habitat","habitat","theme"],
+    ["wildlife","vida selvagem","theme"],
+    ["endangered species","espécie em risco","theme"],
+    ["predator","predador","theme"],
+    ["prey","presa","theme"],
+    ["herd","manada","theme"],
+  ],
+  [
+    ["to admit","admitir","verb"],
+    ["in a way","de certa forma","grammar"],
+    ["sunburn","queimadura solar","theme"],
+    ["suntan","bronzeado","theme"],
+    ["dive","mergulho","theme"],
+    ["underwater","debaixo de água","theme"],
+    ["ring float","boia circular","theme"],
+    ["pool party","festa na piscina","theme"],
+    ["public pool","piscina pública","theme"],
+    ["indoor pool","piscina coberta","theme"],
+  ],
+  [
+    ["to deny","negar","verb"],
+    ["without doubt","sem dúvida","grammar"],
+    ["court (sports)","quadra","theme"],
+    ["locker","cacifo","theme"],
+    ["whistle","apito","theme"],
+    ["uniform","equipamento","theme"],
+    ["jersey","camisola","theme"],
+    ["trainers / sneakers","ténis","theme"],
+    ["injury","lesão","theme"],
+    ["warm-up lap","volta de aquecimento","theme"],
+  ],
+  [
+    ["to confess","confessar","verb"],
+    ["for sure","com certeza","grammar"],
+    ["to taste (food)","provar","theme"],
+    ["leftovers","sobras","theme"],
+    ["takeaway","comida para levar","theme"],
+    ["grocery store","mercearia","theme"],
+    ["supermarket","supermercado","theme"],
+    ["pantry","despensa","theme"],
+    ["fridge","frigorífico","theme"],
+    ["freezer","congelador","theme"],
+  ],
+  [
+    ["to lie","mentir","verb"],
+    ["maybe","talvez","grammar"],
+    ["buffet","bufete","theme"],
+    ["food truck","carrinha de comida","theme"],
+    ["catering","catering","theme"],
+    ["picnic","piquenique","theme"],
+    ["food court","praça de restauração","theme"],
+    ["cutlery","talheres","theme"],
+    ["tablecloth","toalha de mesa","theme"],
+  ],
+  [
+    ["to get scared","assustar-se","verb"],
+    ["who knows / maybe","quem sabe","grammar"],
+    ["local (adj)","local","theme"],
+    ["abroad","no estrangeiro","theme"],
+    ["one-way ticket","bilhete de ida","theme"],
+    ["round-trip ticket","bilhete de ida e volta","theme"],
+    ["platform (train)","cais","theme"],
+    ["carriage","carruagem","theme"],
+    ["toll","portagem","theme"],
+    ["roundabout","rotunda","theme"],
+  ],
+  [
+    ["to worry","preocupar-se","verb"],
+    ["maybe (colloquial)","se calhar","grammar"],
+    ["downpour","aguaceiro forte","theme"],
+    ["climate change","alterações climáticas","theme"],
+    ["weather warning","aviso meteorológico","theme"],
+    ["monsoon","monção","theme"],
+    ["typhoon","tufão","theme"],
+  ],
+  [
+    ["to calm down","acalmar-se","verb"],
+    ["apart from","à parte","grammar"],
+    ["hacker","hacker","theme"],
+    ["encryption","encriptação","theme"],
+    ["smart home","casa inteligente","theme"],
+    ["smartphone","smartphone","theme"],
+    ["headphones","auscultadores","theme"],
+    ["bluetooth","bluetooth","theme"],
+    ["signal","sinal","theme"],
+    ["mobile data","dados móveis","theme"],
+  ],
+  [
+    ["to be proud","orgulhar-se","verb"],
+    ["by chance","por acaso","grammar"],
+    ["paid leave","férias remuneradas","theme"],
+    ["sick leave","baixa médica","theme"],
+    ["remote work","trabalho remoto","theme"],
+    ["office hours","horário de expediente","theme"],
+    ["inbox","caixa de entrada","theme"],
+    ["agenda","ordem de trabalhos","theme"],
+    ["meeting minutes","ata","theme"],
+  ],
+  [
+    ["to regret","arrepender-se","verb"],
+    ["on purpose","de propósito","grammar"],
+    ["inflation","inflação","theme"],
+    ["cost of living","custo de vida","theme"],
+    ["rent (housing)","renda","theme"],
+    ["rental deposit","caução","theme"],
+  ],
+  [
+    ["to complain","queixar-se","verb"],
+    ["unintentionally","sem querer","grammar"],
+    ["smoke detector","detetor de fumo","theme"],
+    ["thermostat","termóstato","theme"],
+    ["radiator","radiador","theme"],
+    ["air conditioning","ar condicionado","theme"],
+    ["lightbulb","lâmpada","theme"],
+    ["electrical socket","tomada","theme"],
+  ],
+  [
+    ["to exaggerate","exagerar","verb"],
+    ["for no reason","à toa","grammar"],
+    ["relieved","aliviado","theme"],
+    ["embarrassed","envergonhado","theme"],
+    ["disappointed","desiludido","theme"],
+    ["content","satisfeito","theme"],
+    ["restless","inquieto","theme"],
+    ["homesick","com saudades de casa","theme"],
+  ],
+  [
+    ["to surprise","surpreender","verb"],
+    ["at ease / freely","à vontade","grammar"],
+    ["peer pressure","pressão dos colegas","theme"],
+    ["social circle","círculo social","theme"],
+    ["housewarming party","inauguração de casa","theme"],
+    ["playdate","encontro para brincar","theme"],
+  ],
+  [
+    ["to sign","assinar","verb"],
+    ["later on","mais tarde","grammar"],
+    ["petition","petição","theme"],
+    ["awareness campaign","campanha de sensibilização","theme"],
+    ["carbon neutral","neutro em carbono","theme"],
+    ["product lifecycle","ciclo de vida do produto","theme"],
+    ["right to repair","direito à reparação","theme"],
+  ],
+  [
+    ["to print","imprimir","verb"],
+    ["for now","por enquanto","grammar"],
+    ["glitch","falha","theme"],
+    ["expansion pack","pacote de expansão","theme"],
+    ["open-world game","jogo de mundo aberto","theme"],
+    ["cheat code","código de batota","theme"],
+  ],
+];
+
+const WEEK_THEMES = [
+  "Zoo & Wild Animals",
+  "Pool & Swimming",
+  "Sports & Fitness",
+  "Food & Cooking",
+  "Restaurant & Dining Out",
+  "Travel & Transport",
+  "Weather & Seasons",
+  "Technology & Internet",
+  "Work & Office",
+  "Money & Shopping",
+  "House & Furniture",
+  "City & Bureaucracy",
+  "Health & Body",
+  "Emotions & Personality",
+  "Relationships & Social Life",
+  "Nature & Sustainability",
+  "Clothing & Fashion",
+  "Arts & Culture",
+  "Music & Entertainment",
+  "Gaming & Hobbies",
+  "Beauty & Fragrance",
+  "Pets & Animals",
+  "Time & Scheduling",
+  "School & Learning",
+  "Abstract & Expressions",
+  "Zoo & Wild Animals",
+  "Pool & Swimming",
+  "Sports & Fitness",
+  "Food & Cooking",
+  "Restaurant & Dining Out",
+  "Travel & Transport",
+  "Weather & Seasons",
+  "Technology & Internet",
+  "Work & Office",
+  "Money & Shopping",
+  "House & Furniture",
+  "City & Bureaucracy",
+  "Health & Body",
+  "Emotions & Personality",
+  "Relationships & Social Life",
+  "Nature & Sustainability",
+  "Clothing & Fashion",
+  "Arts & Culture",
+  "Music & Entertainment",
+  "Gaming & Hobbies",
+  "Beauty & Fragrance",
+  "Pets & Animals",
+  "Time & Scheduling",
+  "School & Learning",
+  "Abstract & Expressions",
+  "Zoo & Wild Animals",
+  "Pool & Swimming",
+  "Sports & Fitness",
+  "Food & Cooking",
+  "Restaurant & Dining Out",
+  "Travel & Transport",
+  "Weather & Seasons",
+  "Technology & Internet",
+  "Work & Office",
+  "Money & Shopping",
+  "House & Furniture",
+  "City & Bureaucracy",
+  "Health & Body",
+  "Emotions & Personality",
+  "Relationships & Social Life",
+  "Nature & Sustainability",
+  "Clothing & Fashion",
+  "Arts & Culture",
+  "Music & Entertainment",
+  "Gaming & Hobbies",
+  "Beauty & Fragrance",
+  "Pets & Animals",
+  "Time & Scheduling",
+  "School & Learning",
+  "Abstract & Expressions",
+  "Zoo & Wild Animals",
+  "Pool & Swimming",
+  "Sports & Fitness",
+  "Food & Cooking",
+  "Restaurant & Dining Out",
+  "Travel & Transport",
+  "Weather & Seasons",
+  "Technology & Internet",
+  "Work & Office",
+  "Money & Shopping",
+  "House & Furniture",
+  "City & Bureaucracy",
+  "Health & Body",
+  "Emotions & Personality",
+  "Relationships & Social Life",
+  "Nature & Sustainability",
+  "Clothing & Fashion",
+  "Arts & Culture",
+  "Music & Entertainment",
+  "Gaming & Hobbies",
+  "Beauty & Fragrance",
+  "Pets & Animals",
+  "Time & Scheduling",
+  "School & Learning",
+  "Abstract & Expressions",
+  "Zoo & Wild Animals",
+  "Pool & Swimming",
+  "Sports & Fitness",
+  "Food & Cooking",
+  "Restaurant & Dining Out",
+  "Travel & Transport",
+  "Weather & Seasons",
+  "Technology & Internet",
+  "Work & Office",
+  "Money & Shopping",
+  "House & Furniture",
+  "City & Bureaucracy",
+  "Health & Body",
+  "Emotions & Personality",
+  "Relationships & Social Life",
+  "Nature & Sustainability",
+  "Clothing & Fashion",
+  "Arts & Culture",
+  "Music & Entertainment",
+  "Gaming & Hobbies",
+  "Beauty & Fragrance",
+  "Pets & Animals",
+  "Time & Scheduling",
+  "School & Learning",
+  "Abstract & Expressions",
+  "Zoo & Wild Animals",
+  "Pool & Swimming",
+  "Sports & Fitness",
+  "Food & Cooking",
+  "Restaurant & Dining Out",
+  "Travel & Transport",
+  "Weather & Seasons",
+  "Technology & Internet",
+  "Work & Office",
+  "Money & Shopping",
+  "House & Furniture",
+  "Emotions & Personality",
+  "Relationships & Social Life",
+  "Nature & Sustainability",
+  "Gaming & Hobbies",
+];
+
+/* =========================================================
+   STATE / STORAGE
+   ========================================================= */
+const STORAGE_KEY = "pt-weekly-progress-v2";
+let state = {
+  currentWeek: 1,
+  known: {}
+};
+let activeTab = "week";
+let saveTimer = null;
+
+function totalWeeks(){ return WEEKS.length; }
+function totalWords(){ return WEEKS.reduce((sum,w)=>sum+w.length, 0); }
+function wordsThrough(week){
+  let sum = 0;
+  for(let i=0; i<week && i<WEEKS.length; i++) sum += WEEKS[i].length;
+  return sum;
+}
+function weekSlice(week){
+  const list = WEEKS[week-1] || [];
+  return list.map((triple, i) => ({
+    idx: `${week}-${i}`, en: triple[0], pt: triple[1], cat: triple[2]
+  }));
+}
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      state = Object.assign(state, parsed);
+    }
+  }catch(e){ /* no saved state yet */ }
+  render();
+}
+function queueSave(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    catch(e){ console.error("Save failed", e); }
+  }, 250);
+}
+
+if("serviceWorker" in navigator){
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+function render(){
+  const app = document.getElementById("app");
+  const tw = totalWeeks();
+  if(state.currentWeek > tw) state.currentWeek = tw;
+  const wordsLearned = wordsThrough(state.currentWeek);
+  const pct = Math.round((wordsLearned / totalWords()) * 100);
+  const currentTheme = WEEK_THEMES[state.currentWeek-1] || "";
+
+  app.innerHTML = `
+    <div class="hero">
+      <div class="hero-top">
+        <div>
+          <p class="eyebrow">Semana</p>
+          <h1 class="week-num">${state.currentWeek}<span class="week-total"> / ${tw}</span></h1>
+          <span class="theme-pill">${currentTheme}</span>
+        </div>
+        <div class="streak-pill">${wordsLearned} palavras<br>aprendidas</div>
+      </div>
+      <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div class="progress-caption">${pct}% de ${totalWords()} palavras · ${tw} semanas ao todo</div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab ${activeTab==='week'?'active':''}" data-tab="week">Semana</button>
+      <button class="tab ${activeTab==='roadmap'?'active':''}" data-tab="roadmap">Panorama</button>
+      <button class="tab ${activeTab==='all'?'active':''}" data-tab="all">Todas</button>
+      <button class="tab ${activeTab==='settings'?'active':''}" data-tab="settings">Definições</button>
+    </div>
+
+    <div class="content" id="content"></div>
+  `;
+
+  document.querySelectorAll(".tab").forEach(btn=>{
+    btn.addEventListener("click", ()=>{ activeTab = btn.dataset.tab; render(); });
+  });
+
+  const content = document.getElementById("content");
+  if(activeTab === "week") renderWeek(content);
+  else if(activeTab === "roadmap") renderRoadmap(content);
+  else if(activeTab === "all") renderAll(content);
+  else renderSettings(content);
+}
+
+function catLabel(cat){
+  if(cat === "verb") return "verbo";
+  if(cat === "grammar") return "conetor";
+  return "tema";
+}
+
+function flashCardHTML(word){
+  const isKnown = !!state.known[word.idx];
+  return `
+    <div class="flash" data-idx="${word.idx}">
+      <div class="flash-inner">
+        <div class="flash-face front">
+          <span class="cat-tag ${word.cat}">${catLabel(word.cat)}</span>
+          <span class="flash-word">${word.en}</span>
+        </div>
+        <div class="flash-face back">
+          <span class="cat-tag ${word.cat}">${catLabel(word.cat)}</span>
+          <span class="flash-word">${word.pt}</span>
+          <div class="flash-check ${isKnown?'done':''}" data-check="${word.idx}">✓</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function attachCardHandlers(container){
+  container.querySelectorAll(".flash").forEach(card=>{
+    card.addEventListener("click", (e)=>{
+      if(e.target.dataset && e.target.dataset.check){
+        e.stopPropagation();
+        const idx = e.target.dataset.check;
+        state.known[idx] = !state.known[idx];
+        e.target.classList.toggle("done");
+        queueSave();
+        return;
+      }
+      card.classList.toggle("flipped");
+    });
+  });
+}
+
+function renderWeek(content){
+  const newWords = weekSlice(state.currentWeek);
+  const reviewWords = state.currentWeek > 1 ? weekSlice(state.currentWeek - 1) : [];
+  const isLastWeek = state.currentWeek >= totalWeeks();
+
+  let html = "";
+  if(reviewWords.length){
+    html += `<p class="section-label"><span class="accent">●</span> Revisão · semana ${state.currentWeek-1}</p>
+      <div class="card-grid">${reviewWords.map(w=>flashCardHTML(w)).join("")}</div>`;
+  } else {
+    html += `<p class="section-label">Revisão</p>
+      <p class="empty-note">A tua primeira semana — ainda não há palavras para rever. Elas aparecem a partir da semana 2.</p>`;
+  }
+
+  html += `<p class="section-label"><span class="accent">●</span> Novas · semana ${state.currentWeek}</p>
+    <div class="card-grid">${newWords.map(w=>flashCardHTML(w)).join("")}</div>`;
+
+  html += `<div class="legend">
+      <span class="legend-item"><span class="legend-dot" style="background:#c08a2e"></span> verbo</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#5c7a63"></span> conetor</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#3f6690"></span> tema da semana</span>
+    </div>`;
+
+  html += `<div class="advance-wrap">
+      <button class="advance-btn" id="advanceBtn" ${isLastWeek?'disabled style="opacity:0.5"':''}>
+        ${isLastWeek ? 'Última semana concluída 🎉' : `Avançar para a semana ${state.currentWeek+1} →`}
+      </button>
+      <p class="advance-hint">Toca numa carta para virar. O ✓ é só para tua referência — não muda o calendário.</p>
+    </div>`;
+
+  content.innerHTML = html;
+  attachCardHandlers(content);
+
+  const btn = document.getElementById("advanceBtn");
+  if(btn && !isLastWeek){
+    btn.addEventListener("click", ()=>{
+      state.currentWeek += 1;
+      queueSave();
+      render();
+    });
+  }
+}
+
+function renderRoadmap(content){
+  // group consecutive weeks by theme for a readable overview
+  const groups = [];
+  WEEK_THEMES.forEach((theme, i)=>{
+    const week = i+1;
+    if(groups.length && groups[groups.length-1].theme === theme){
+      groups[groups.length-1].end = week;
+    } else {
+      groups.push({theme, start: week, end: week});
+    }
+  });
+
+  let html = `<p class="empty-note" style="margin-bottom:14px;">Cada semana mistura 1 verbo + 1 conetor com 8 palavras do tema da semana. Aqui está o percurso completo:</p>`;
+  groups.forEach(g=>{
+    const label = g.start === g.end ? `Semana ${g.start}` : `Semanas ${g.start}–${g.end}`;
+    const isCurrent = state.currentWeek >= g.start && state.currentWeek <= g.end;
+    const isDone = state.currentWeek > g.end;
+    html += `<div class="roadmap-row ${isCurrent?'current':''}">
+      <span class="roadmap-weeks">${label}</span>
+      <span class="roadmap-theme">${g.theme}</span>
+      <span class="roadmap-status">${isDone?'concluído':isCurrent?'agora':''}</span>
+    </div>`;
+  });
+  content.innerHTML = html;
+}
+
+function renderAll(content){
+  content.innerHTML = `
+    <input class="search-input" id="searchBox" placeholder="Procurar uma palavra...">
+    <div id="wordList"></div>
+  `;
+  const listEl = document.getElementById("wordList");
+
+  function draw(filter){
+    const f = (filter||"").toLowerCase().trim();
+    let rows = "";
+    WEEKS.forEach((weekWords, wIdx)=>{
+      const wk = wIdx + 1;
+      const reached = wk <= state.currentWeek;
+      weekWords.forEach(triple=>{
+        const [en, pt] = triple;
+        if(f && !en.toLowerCase().includes(f) && !pt.toLowerCase().includes(f)) return;
+        rows += `<div class="word-row" style="opacity:${reached?1:0.45}">
+          <span class="en">${en}</span>
+          <span class="pt">${pt}</span>
+          <span class="wk">sem. ${wk}</span>
+        </div>`;
+      });
+    });
+    listEl.innerHTML = rows || `<p class="empty-note">Sem resultados.</p>`;
+  }
+  draw("");
+  document.getElementById("searchBox").addEventListener("input", (e)=> draw(e.target.value));
+}
+
+function renderSettings(content){
+  content.innerHTML = `
+    <div class="settings-block">
+      <h3>Saltar para outra semana</h3>
+      <p>Se precisares de recuar ou avançar manualmente.</p>
+      <div class="week-jump">
+        <input type="number" id="weekInput" min="1" max="${totalWeeks()}" value="${state.currentWeek}">
+        <button class="btn-sec" id="jumpBtn">Ir</button>
+      </div>
+    </div>
+
+    <div class="settings-block">
+      <h3>Sobre esta lista</h3>
+      <p>${totalWords()} palavras de português europeu ao longo de ${totalWeeks()} semanas (cerca de ${Math.round(totalWeeks()/52*10)/10} anos ao ritmo de uma semana por semana). Cada semana combina 1 verbo, 1 conetor/preposição e algumas palavras de um tema — os temas alternam a cada semana e voltam mais tarde com palavras novas. Vê a aba "Panorama" para o percurso completo.</p>
+    </div>
+
+    <div class="settings-block">
+      <h3>Recomeçar</h3>
+      <p>Isto apaga o teu progresso (semana atual e palavras marcadas) e volta à semana 1.</p>
+      <button class="btn-sec danger" id="resetBtn">Recomeçar do zero</button>
+    </div>
+  `;
+
+  document.getElementById("jumpBtn").addEventListener("click", ()=>{
+    const v = parseInt(document.getElementById("weekInput").value, 10);
+    if(v >= 1 && v <= totalWeeks()){
+      state.currentWeek = v;
+      queueSave();
+      activeTab = "week";
+      render();
+    }
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", ()=>{
+    if(confirm("Tens a certeza? Isto apaga o teu progresso guardado.")){
+      state.currentWeek = 1;
+      state.known = {};
+      queueSave();
+      activeTab = "week";
+      render();
+    }
+  });
+}
+
+loadState();
+</script>
+</body>
+</html>
